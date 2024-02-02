@@ -1,0 +1,6 @@
+@LuzmaShopAPI_HostAddress = http://localhost:5288
+
+GET {{LuzmaShopAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
