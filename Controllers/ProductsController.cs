@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LuzmaShopAPI.Data;
 using LuzmaShopAPI.Models;
+using Microsoft.Data.SqlClient;
 
 namespace LuzmaShopAPI.Controllers
 {
@@ -21,12 +22,45 @@ namespace LuzmaShopAPI.Controllers
             _context = context;
         }
 
+        //GET: api/Products/GetProductsCategory
+        [HttpGet("GetProductsCategory")]
+        public async Task<ActionResult<IEnumerable<Product>>> GetProducts(string category, string subcategory, int count)
+        {
+            IQueryable<Product> query = _context.Product;
+
+            if (!string.IsNullOrEmpty(category))
+            {
+                query = query.Where(p => p.ProductCategory.Category == category);
+            }
+
+            if (!string.IsNullOrEmpty(subcategory))
+            {
+                query = query.Where(p => p.ProductCategory.SubCategory == subcategory);
+            }
+
+            if (count > 0)
+            {
+                query = query.OrderBy(p => Guid.NewGuid()).Take(count);
+            }
+
+            return await query
+                .Include(p => p.ProductCategory)
+                .Include(p => p.Offer)
+                .ToListAsync();
+        }
+
         // GET: api/Products
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
         {
-            return await _context.Product.ToListAsync();
+            var products = await _context.Product
+                                        .Include(p => p.ProductCategory)
+                                        .Include(p => p.Offer)
+                                        .ToListAsync();
+
+            return Ok(products);
         }
+
 
         // GET: api/Products/5
         [HttpGet("{id}")]
@@ -47,6 +81,12 @@ namespace LuzmaShopAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProduct(int id, Product product)
         {
+            // Validate the model
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             if (id != product.Id)
             {
                 return BadRequest();
@@ -70,7 +110,7 @@ namespace LuzmaShopAPI.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(await _context.Product.ToListAsync());
         }
 
         // POST: api/Products
@@ -78,11 +118,40 @@ namespace LuzmaShopAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct(Product product)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Check if the category already exists
+            var existingCategory = _context.ProductCategory
+                                            .FirstOrDefault(pc =>
+                                                pc.Id == product.ProductCategory.Id);
+
+            // Check if the offer already exists
+            var existingOffer = _context.Offer
+                                        .FirstOrDefault(o =>
+                                            o.Id == product.Offer.Id);
+
+            // If either category or offer doesn't exist, return BadRequest
+            if (existingCategory == null || existingOffer == null)
+            {
+                return BadRequest("Invalid category or offer.");
+            }
+
+            // Set the ProductCategoryId and OfferId in the product
+            product.ProductCategory = existingCategory;
+            product.Offer = existingOffer;
+
+            // Add the product to the context and save changes
             _context.Product.Add(product);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProduct", new { id = product.Id }, product);
+            return Ok(await _context.Product.ToListAsync());
         }
+
+
+
 
         // DELETE: api/Products/5
         [HttpDelete("{id}")]
@@ -97,7 +166,7 @@ namespace LuzmaShopAPI.Controllers
             _context.Product.Remove(product);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(await _context.Product.ToListAsync());
         }
 
         private bool ProductExists(int id)

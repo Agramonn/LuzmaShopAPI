@@ -70,7 +70,7 @@ namespace LuzmaShopAPI.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(await _context.Offer.ToListAsync());
         }
 
         // POST: api/Offers
@@ -81,7 +81,7 @@ namespace LuzmaShopAPI.Controllers
             _context.Offer.Add(offer);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetOffer", new { id = offer.Id }, offer);
+            return Ok(await _context.Offer.ToListAsync());
         }
 
         // DELETE: api/Offers/5
@@ -97,7 +97,7 @@ namespace LuzmaShopAPI.Controllers
             _context.Offer.Remove(offer);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(await _context.Offer.ToListAsync());
         }
 
         private bool OfferExists(int id)

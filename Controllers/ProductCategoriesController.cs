@@ -70,7 +70,7 @@ namespace LuzmaShopAPI.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(await _context.ProductCategory.ToListAsync());
         }
 
         // POST: api/ProductCategories
@@ -81,7 +81,7 @@ namespace LuzmaShopAPI.Controllers
             _context.ProductCategory.Add(productCategory);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProductCategory", new { id = productCategory.Id }, productCategory);
+            return Ok(await _context.ProductCategory.ToListAsync());
         }
 
         // DELETE: api/ProductCategories/5
@@ -97,7 +97,7 @@ namespace LuzmaShopAPI.Controllers
             _context.ProductCategory.Remove(productCategory);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(await _context.ProductCategory.ToListAsync());
         }
 
         private bool ProductCategoryExists(int id)

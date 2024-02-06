@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LuzmaShopAPI.Migrations
 {
     [DbContext(typeof(LuzmaShopAPIContext))]
-    [Migration("20240202223653_First Migration")]
-    partial class FirstMigration
+    [Migration("20240206023130_First migration")]
+    partial class Firstmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
