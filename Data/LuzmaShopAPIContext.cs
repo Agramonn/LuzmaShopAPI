@@ -17,5 +17,7 @@ namespace LuzmaShopAPI.Data
         public DbSet<LuzmaShopAPI.Models.Offer> Offer { get; set; } = default!;
         public DbSet<LuzmaShopAPI.Models.Product> Product { get; set; } = default!;
         public DbSet<LuzmaShopAPI.Models.ProductCategory> ProductCategory { get; set; } = default!;
+        public DbSet<LuzmaShopAPI.Models.User> User { get; set; } = default!;
+        public DbSet<LuzmaShopAPI.Models.Review> Review { get; set; } = default!;
     }
 }
