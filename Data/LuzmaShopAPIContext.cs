@@ -19,5 +19,9 @@ namespace LuzmaShopAPI.Data
         public DbSet<LuzmaShopAPI.Models.ProductCategory> ProductCategory { get; set; } = default!;
         public DbSet<LuzmaShopAPI.Models.User> User { get; set; } = default!;
         public DbSet<LuzmaShopAPI.Models.Review> Review { get; set; } = default!;
+        public DbSet<LuzmaShopAPI.Models.Cart> Cart { get; set; } = default!;
+        public DbSet<LuzmaShopAPI.Models.CartItem> CartItem { get; set; } = default!;
+        public DbSet<LuzmaShopAPI.Models.UserCart> UserCart { get; set; } = default!;
+        public DbSet<LuzmaShopAPI.Models.UserCartItem> UserCartItem { get; set; } = default!;
     }
 }

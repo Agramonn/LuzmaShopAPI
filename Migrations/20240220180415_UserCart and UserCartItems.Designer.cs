@@ -4,6 +4,7 @@ using LuzmaShopAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LuzmaShopAPI.Migrations
 {
     [DbContext(typeof(LuzmaShopAPIContext))]
-    partial class LuzmaShopAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20240220180415_UserCart and UserCartItems")]
+    partial class UserCartandUserCartItems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,11 +64,16 @@ namespace LuzmaShopAPI.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UserCartId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CartId");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("UserCartId");
 
                     b.ToTable("CartItem");
                 });
@@ -264,14 +272,9 @@ namespace LuzmaShopAPI.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserCartId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("UserCartId");
 
                     b.ToTable("UserCartItem");
                 });
@@ -300,6 +303,10 @@ namespace LuzmaShopAPI.Migrations
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("LuzmaShopAPI.Models.UserCart", null)
+                        .WithMany("CartItems")
+                        .HasForeignKey("UserCartId");
 
                     b.Navigation("Cart");
 
@@ -362,10 +369,6 @@ namespace LuzmaShopAPI.Migrations
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("LuzmaShopAPI.Models.UserCart", null)
-                        .WithMany("CartItems")
-                        .HasForeignKey("UserCartId");
 
                     b.Navigation("Product");
                 });
