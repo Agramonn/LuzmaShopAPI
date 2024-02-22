@@ -49,6 +49,7 @@ namespace LuzmaShopAPI.Controllers
                     new Claim("firstName", user.FirstName),
                     new Claim("lastName", user.LastName),
                     new Claim("email", user.Email),
+                    new Claim("password", user.Password),
                     new Claim("address", user.Address),
                     new Claim("mobile", user.Mobile),
                     new Claim("createdAt", user.CreatedAt),

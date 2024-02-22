@@ -23,5 +23,8 @@ namespace LuzmaShopAPI.Data
         public DbSet<LuzmaShopAPI.Models.CartItem> CartItem { get; set; } = default!;
         public DbSet<LuzmaShopAPI.Models.UserCart> UserCart { get; set; } = default!;
         public DbSet<LuzmaShopAPI.Models.UserCartItem> UserCartItem { get; set; } = default!;
+        public DbSet<LuzmaShopAPI.Models.PaymentMethod> PaymentMethod { get; set; } = default!;
+        public DbSet<LuzmaShopAPI.Models.Payment> Payment { get; set; } = default!;
+        public DbSet<LuzmaShopAPI.Models.Order> Order { get; set; } = default!;
     }
 }

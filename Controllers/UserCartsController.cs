@@ -25,9 +25,9 @@ namespace LuzmaShopAPI.Controllers
         public async Task<ActionResult<UserCart>> GetAllPreviousCartsOfUser(int UserId)
         {
             var usercart = new UserCart();
-            var ActiveCarts = await _context.Cart.Where(c => c.User.Id == UserId && c.Ordered == true).ToListAsync();
+            var PreviousCarts = await _context.Cart.Where(c => c.User.Id == UserId && c.Ordered == true).ToListAsync();
 
-            if (ActiveCarts == null || ActiveCarts.Count == 0)
+            if (PreviousCarts == null || PreviousCarts.Count == 0)
             {
                 return Ok(usercart);
             }

@@ -58,6 +58,8 @@ namespace LuzmaShopAPI.Controllers
 
                 _context.Cart.Add(cart);
                 await _context.SaveChangesAsync();
+
+                query = await _context.Cart.OrderBy(c => c.Id).LastOrDefaultAsync();
             }
 
             // Use the existing query result instead of querying again
