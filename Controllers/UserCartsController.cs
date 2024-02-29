@@ -22,48 +22,9 @@ namespace LuzmaShopAPI.Controllers
         }
         // GET: api/UserCarts
         [HttpGet("GetAllPreviousCartsOfUser/{UserId}")]
-        public async Task<ActionResult<UserCart>> GetAllPreviousCartsOfUser(int UserId)
+        public async Task<ActionResult<IEnumerable<UserCart>>> GetAllPreviousCartsOfUser(int UserId)
         {
-            var usercart = new UserCart();
-            var PreviousCarts = await _context.Cart.Where(c => c.User.Id == UserId && c.Ordered == true).ToListAsync();
-
-            if (PreviousCarts == null || PreviousCarts.Count == 0)
-            {
-                return Ok(usercart);
-            }
-
-            var cartid = await _context.Cart.Where(c => c.User.Id == UserId && c.Ordered).Select(c => c.Id).FirstOrDefaultAsync();
-
-            var cartitemids = await _context.CartItem.Include(c => c.Product).Where(c => c.Cart.Id == cartid).ToListAsync();
-
-            var user = await _context.User.FirstOrDefaultAsync(u => u.Id == UserId);
-
-            foreach (var item in cartitemids)
-            {
-                var productitem = _context.Product.Include(p => p.ProductCategory).Include(p => p.Offer).Where(p => p.Id == item.Product.Id).FirstOrDefault();
-
-                if (productitem != null)
-                {
-                    UserCartItem cartitem = new()
-                    {
-                        Id = item.Id,
-                        Product = productitem,
-                    };
-                    usercart.CartItems.Add(cartitem);
-                }
-            }
-
-
-            if (user != null)
-            {
-                usercart.Id = cartid;
-                usercart.User = user;
-                usercart.Ordered = false;
-                usercart.OrderedOn = "";
-            }
-
-            return Ok(usercart);
-
+            return await _context.UserCart.Where(uc => uc.Ordered == true && uc.User.Id == UserId).Include(uc => uc.User).Include(uc => uc.CartItems).ThenInclude(ci => ci.Product).ThenInclude(pi=>pi.ProductCategory).ToListAsync();
         }
         // GET: api/UserCarts
         [HttpGet("GetActiveCartOfUser/{UserId}")]
